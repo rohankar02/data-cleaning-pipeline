@@ -64,4 +64,4 @@ The pipeline automatically identifies patterns like:
 - Anomalies that skew statistical models.
 
 ---
-*Created for the Data Science Portfolio by Antigravity AI.*
+*Created for the Data Science Portfolio.*
