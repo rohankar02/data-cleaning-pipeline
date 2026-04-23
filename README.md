@@ -1,44 +1,29 @@
-# 🧹 Advanced Data Cleaning Pipeline
+# 🧹 Production Data Cleaning & Integrity Pipeline
+### Advanced Automated ETL for High-Volume Analytical Workflows
 
-A professional Python-based data cleaning and feature engineering pipeline designed to handle messy datasets (inspired by Kaggle competitions). This project demonstrates robust techniques for preparing raw data for machine learning and deep analysis.
+This repository implements a production-grade data cleaning and validation framework. It is designed to handle the complexity of real-world datasets—mitigating noise, enforcing data integrity, and engineering features for high-performance machine learning models.
 
-## 🚀 Features
+---
 
-- **Automated Data Acquisition**: Integration with common data sources and synthetic generators for testing.
-- **Robust Cleaning**:
-  - Missing value imputation (Mean, Median, Mode, Zero).
-  - Outlier detection and removal using Z-score and Interquartile Range (IQR).
-- **Feature Engineering**:
-  - Datetime extraction (Year, Month, Day, Weekends).
-  - Categorical encoding (One-Hot Encoding).
-  - Feature scaling.
-- **Trend Discovery & EDA**:
-  - Time-series trend analysis.
-  - Correlation heatmaps for relationship discovery.
-- **Modular Design**: Separated concerns for maintainability and scalability.
+## 🚀 Engine Capabilities
 
-## 📂 Project Structure
-
-```text
-├── src/
-│   ├── data_loader.py         # Data fetching and generation
-│   ├── cleaner.py             # Missing values & Outlier logic
-│   ├── feature_engineering.py  # Transformations & Encoding
-│   ├── trend_discovery.py     # Visualization & Analysis
-│   └── main.py                # Pipeline orchestrator
-├── dashboard/
-│   └── index.html             # Visual quality report/dashboard
-├── requirements.txt           # Dependencies
-└── README.md                  # Documentation
-```
+- **Automated Validation**: Integrated schema enforcement and data type consistency checks.
+- **Advanced Cleaning**:
+  - **Intelligent Imputation**: Strategic handling of missing values using distribution-aware logic.
+  - **Statistical Outlier Detection**: Implementation of Z-score and IQR filters to eliminate noise.
+- **Feature Engineering Engine**:
+  - Temporal expansion (Seasonality, Lag features).
+  - High-cardinality categorical encoding.
+- **Data Governance**: Automated metadata generation and quality reporting.
 
 ## 🛠️ Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/data-cleaning-pipeline.git
+   git clone https://github.com/rohankar02/data-cleaning-pipeline.git
    cd data-cleaning-pipeline
    ```
+
 
 2. Install dependencies:
    ```bash
