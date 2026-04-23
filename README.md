@@ -26,6 +26,8 @@ A professional Python-based data cleaning and feature engineering pipeline desig
 │   ├── feature_engineering.py  # Transformations & Encoding
 │   ├── trend_discovery.py     # Visualization & Analysis
 │   └── main.py                # Pipeline orchestrator
+├── dashboard/
+│   └── index.html             # Visual quality report/dashboard
 ├── requirements.txt           # Dependencies
 └── README.md                  # Documentation
 ```

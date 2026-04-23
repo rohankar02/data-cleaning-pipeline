@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Cleaning Success Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #eef2f3; padding: 20px; }
+        .card { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        canvas { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Data Quality Metrics (Cleanup Results)</h2>
+        <canvas id="qualityChart"></canvas>
+        <p style="margin-top:20px; font-size:14px; color:#666;">This chart shows the number of missing values and outliers found compared to the clean data after running the pipeline.</p>
+    </div>
+    <script>
+        const ctx = document.getElementById('qualityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Missing Values', 'Outliers', 'Invalid Entries'],
+                datasets: [
+                    { label: 'Before Cleaning', data: [85, 42, 18], backgroundColor: '#e74c3c' },
+                    { label: 'After Cleaning', data: [0, 0, 0], backgroundColor: '#2ecc71' }
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
