@@ -1,37 +1,18 @@
 import pandas as pd
-import numpy as np
 
-class FeatureEngineer:
-    """
-    Module for feature engineering and transformation.
-    """
+# Creating new columns for our analysis
+
+def get_date_details(df, date_column_name):
+    # Change the column to a date format
+    df[date_column_name] = pd.to_datetime(df[date_column_name])
     
-    @staticmethod
-    def create_date_features(df, date_col):
-        """
-        Extracts features from datetime columns.
-        """
-        df[date_col] = pd.to_datetime(df[date_col])
-        df['year'] = df[date_col].dt.year
-        df['month'] = df[date_col].dt.month
-        df['day'] = df[date_col].dt.day
-        df['day_of_week'] = df[date_col].dt.dayofweek
-        df['is_weekend'] = df['day_of_week'].isin([5, 6]).astype(int)
-        return df
+    # Extract year and month so we can see trends
+    df['year_extracted'] = df[date_column_name].dt.year
+    df['month_extracted'] = df[date_column_name].dt.month
+    
+    return df
 
-    @staticmethod
-    def encode_categorical(df, columns):
-        """
-        Performs one-hot encoding for categorical variables.
-        """
-        return pd.get_dummies(df, columns=columns, drop_first=True)
-
-    @staticmethod
-    def scaling_features(df, columns):
-        """
-        Basic min-max scaling for demonstration.
-        """
-        df_scaled = df.copy()
-        for col in columns:
-            df_scaled[col] = (df_scaled[col] - df_scaled[col].min()) / (df_scaled[col].max() - df_scaled[col].min())
-        return df_scaled
+def convert_text_to_numbers(df, columns_to_change):
+    # This turns words into numbers so models can understand them
+    # It creates new columns (One-Hot Encoding)
+    return pd.get_dummies(df, columns=columns_to_change)

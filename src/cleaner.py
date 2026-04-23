@@ -1,64 +1,35 @@
 import pandas as pd
 import numpy as np
-from scipy import stats
 
-class DataCleaner:
-    """
-    A robust data cleaning module for handling missing values and outliers.
-    """
-    
-    @staticmethod
-    def handle_missing_values(df, strategy='mean', numerical_cols=None, categorical_cols=None):
-        """
-        Handles missing values using various strategies.
-        """
-        df_cleaned = df.copy()
+# Functions to clean our messy data for the project
+
+def fill_missing_values(df, numerical_columns, categorical_columns):
+    # This function looks for empty cells and fills them
+    for col in numerical_columns:
+        # We use the average (median) to fill empty numbers
+        median_value = df[col].median()
+        df[col] = df[col].fillna(median_value)
         
-        if numerical_cols:
-            for col in numerical_cols:
-                if strategy == 'mean':
-                    df_cleaned[col] = df_cleaned[col].fillna(df_cleaned[col].mean())
-                elif strategy == 'median':
-                    df_cleaned[col] = df_cleaned[col].fillna(df_cleaned[col].median())
-                elif strategy == 'zero':
-                    df_cleaned[col] = df_cleaned[col].fillna(0)
-                    
-        if categorical_cols:
-            for col in categorical_cols:
-                # Mode imputation for categorical
-                mode_val = df_cleaned[col].mode()
-                if not mode_val.empty:
-                    df_cleaned[col] = df_cleaned[col].fillna(mode_val[0])
-                else:
-                    df_cleaned[col] = df_cleaned[col].fillna('Unknown')
-                    
-        return df_cleaned
+    for col in categorical_columns:
+        # We use the most common word (mode) to fill empty text boxes
+        most_common = df[col].mode()[0] if not df[col].mode().empty else "Unknown"
+        df[col] = df[col].fillna(most_common)
+    
+    return df
 
-    @staticmethod
-    def remove_outliers_zscore(df, columns, threshold=3):
-        """
-        Removes outliers based on Z-score.
-        """
-        df_cleaned = df.copy()
-        for col in columns:
-            z_scores = np.abs(stats.zscore(df_cleaned[col].dropna()))
-            # Map back to original indices
-            non_null_indices = df_cleaned[col].dropna().index
-            outlier_indices = non_null_indices[z_scores > threshold]
-            df_cleaned = df_cleaned.drop(outlier_indices)
-        return df_cleaned
-
-    @staticmethod
-    def remove_outliers_iqr(df, columns):
-        """
-        Removes outliers based on Interquartile Range (IQR).
-        """
-        df_cleaned = df.copy()
-        for col in columns:
-            Q1 = df_cleaned[col].quantile(0.25)
-            Q3 = df_cleaned[col].quantile(0.75)
-            IQR = Q3 - Q1
-            lower_bound = Q1 - 1.5 * IQR
-            upper_bound = Q3 + 1.5 * IQR
-            df_cleaned = df_cleaned[(df_cleaned[col] >= lower_bound) & (df_cleaned[col] <= upper_bound)]
-        return df_cleaned
+def clean_outliers(df, columns_to_check):
+    # This function removes weird data points (outliers) using the IQR method
+    # It keeps only the data that is within a normal range
+    for col in columns_to_check:
+        first_quarter = df[col].quantile(0.25)
+        third_quarter = df[col].quantile(0.75)
+        iqr_value = third_quarter - first_quarter
+        
+        # Calculate the boundaries
+        lower_limit = first_quarter - 1.5 * iqr_value
+        upper_limit = third_quarter + 1.5 * iqr_value
+        
+        # Filter the data
+        df = df[(df[col] >= lower_limit) & (df[col] <= upper_limit)]
+        
+    return df

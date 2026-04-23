@@ -1,52 +1,38 @@
-from data_loader import DataLoader
-from cleaner import DataCleaner
-from feature_engineering import FeatureEngineer
-from trend_discovery import TrendDiscoverer
+import data_loader
+import cleaner
+import feature_engineering
+import trend_discovery
 import pandas as pd
 
-def main():
-    print("--- Starting Data Cleaning Pipeline ---")
-    
-    # 1. Load Data
-    print("Step 1: Loading Messy Dataset...")
-    loader = DataLoader()
-    df = loader.generate_messy_sales_data(rows=500)
-    print(f"Dataset Loaded. Shape: {df.shape}")
-    print(df.isnull().sum())
+# This is the main part of my Data Cleaning project
 
-    # 2. Handle Missing Values
-    print("\nStep 2: Cleaning Missing Values...")
-    cleaner = DataCleaner()
-    df_cleaned = cleaner.handle_missing_values(
-        df, 
-        strategy='median', 
-        numerical_cols=['Sales', 'Quantity'],
-        categorical_cols=['Region']
+def run_my_pipeline():
+    print("Step 1: Getting the messy data...")
+    # Using my data loader script to get a messy sales file
+    raw_df = data_loader.generate_messy_sales_data(rows=400)
+    print(f"Data Loaded! Total rows: {len(raw_df)}")
+
+    print("Step 2: Fixing missing values...")
+    # Fill empty boxes in Sales, Quantity and Region
+    df_no_nulls = cleaner.fill_missing_values(
+        raw_df, 
+        numerical_columns=['Sales', 'Quantity'], 
+        categorical_columns=['Region']
     )
-    print(f"Missing values after cleaning:\n{df_cleaned.isnull().sum()}")
 
-    # 3. Remove Outliers
-    print("\nStep 3: Removing Outliers...")
-    df_no_outliers = cleaner.remove_outliers_iqr(df_cleaned, ['Sales', 'Quantity'])
-    print(f"Shape after outlier removal: {df_no_outliers.shape}")
+    print("Step 3: Removing outliers...")
+    # Strip away the weird/extreme numbers
+    df_clean = cleaner.clean_outliers(df_no_nulls, ['Sales', 'Quantity'])
 
-    # 4. Feature Engineering
-    print("\nStep 4: Performing Feature Engineering...")
-    engineer = FeatureEngineer()
-    df_engineered = engineer.create_date_features(df_no_outliers, 'Date')
-    df_engineered = engineer.encode_categorical(df_engineered, ['Product', 'Region'])
-    print(f"New column list: {list(df_engineered.columns)}")
+    print("Step 4: Making new features...")
+    # Extract dates and convert categories
+    df_with_dates = feature_engineering.get_date_details(df_clean, 'Date')
+    df_final = feature_engineering.convert_text_to_numbers(df_with_dates, ['Product', 'Region'])
 
-    # 5. Trend Discovery
-    print("\nStep 5: Discovering Trends...")
-    discoverer = TrendDiscoverer()
-    df_trends = discoverer.analyze_time_trends(df_engineered, 'Date', 'Sales')
-    discoverer.correlation_heat_map(df_engineered)
-    
-    print("\n--- Pipeline Execution Complete ---")
-    print("Visualizations saved: 'trend_analysis.png', 'correlation_matrix.png'")
-    df_engineered.to_csv('cleaned_data.csv', index=False)
-    print("Cleaned data saved to 'cleaned_data.csv'")
+    print("Step 5: Saving the output...")
+    # Save to a clean CSV file
+    df_final.to_csv('cleaned_output_data.csv', index=False)
+    print("Project finished successfully! Output saved to 'cleaned_output_data.csv'")
 
 if __name__ == "__main__":
-    main()
+    run_my_pipeline()
